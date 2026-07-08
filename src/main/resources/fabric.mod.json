@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "serverpassword",
+	"version": "${version}",
+	"name": "Server Password",
+	"description": "Password protect your whitelist",
+	"authors": [
+		"FBanna"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/serverpassword/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"fbanna.serverpassword.ServerPassword"
+		]
+	},
+	"mixins": [
+		"serverpassword.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
