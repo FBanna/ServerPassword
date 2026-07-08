@@ -18,9 +18,9 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"modid" {
+		"serverpassword" {
 			sourceSet sourceSets.main
-			sourceSet sourceSets.client
+
 		}
 	}
 
@@ -29,6 +29,12 @@ loom {
 		server {
 			getJvmArguments().add("-ea")
 		}
+	}
+}
+
+fabricApi {
+	configureDataGeneration() {
+		client = true
 	}
 }
 

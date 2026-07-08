@@ -13,6 +13,9 @@
 	"entrypoints": {
 		"main": [
 			"fbanna.serverpassword.ServerPassword"
+		],
+		"fabric-datagen": [
+			"fbanna.serverpassword.client.ServerPasswordDataGenerator"
 		]
 	},
 	"mixins": [
