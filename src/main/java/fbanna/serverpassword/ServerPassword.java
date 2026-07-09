@@ -1,9 +1,10 @@
 package fbanna.serverpassword;
 
-import fbanna.serverpassword.event.LoginEvent;
+import fbanna.serverpassword.event.DialogEvent;
+import fbanna.serverpassword.event.LoginDialogEvent;
+import fbanna.serverpassword.state.LoginState;
+import fbanna.serverpassword.state.LoginStates;
 import net.fabricmc.api.ModInitializer;
-
-import net.minecraft.resources.Identifier;
 
 import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
@@ -19,7 +20,10 @@ public class ServerPassword implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public final static Set<UUID> WATCHEDPLAYERS = new HashSet<>();
+	//public final static Set<UUID> WATCHEDPLAYERS = new HashSet<>();
+	public final static HashMap<UUID, LoginState> WATCHEDPLAYERS = new HashMap<>();
+
+
 
 	@Override
 	public void onInitialize() {
@@ -31,20 +35,20 @@ public class ServerPassword implements ModInitializer {
 
 		LOGGER.info("Initialised ServerPassword");
 
+		new LoginDialogEvent("login");
 
-		LoginEvent.EVENT.register(((player, password) -> {
-
-			if (password == "h") {
-				LOGGER.info("nice going, all good");
-				return InteractionResult.PASS;
-			} else {
-				LOGGER.info("failed with password: " + password);
-				return InteractionResult.FAIL;
-			}
-
-
-
-		}));
+//
+//		DialogEvent.EVENT.register(((player, password) -> {
+//
+//			if (password == "h") {
+//				LOGGER.info("nice going, all good");
+//				return InteractionResult.PASS;
+//			} else {
+//				LOGGER.info("failed with password: " + password);
+//				return InteractionResult.FAIL;
+//			}
+//
+//		}));
 	}
 
 }

@@ -1,11 +1,11 @@
 package fbanna.serverpassword.mixin;
 
 
-import fbanna.serverpassword.ServerPassword;
+import fbanna.serverpassword.state.LoginState;
+import fbanna.serverpassword.state.LoginStates;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.players.NameAndId;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +22,7 @@ public class MixinCanLogin {
     @Inject(method = "canPlayerLogin", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;", shift = At.Shift.BEFORE), cancellable = true)
     private void inject(final SocketAddress address, final NameAndId nameAndId, CallbackInfoReturnable<Component> cir) {
 
-        WATCHEDPLAYERS.add(nameAndId.id());
+        WATCHEDPLAYERS.put(nameAndId.id(), new LoginState());
         LOGGER.info("watching player");
         cir.setReturnValue(null);
 

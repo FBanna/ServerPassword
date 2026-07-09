@@ -16,16 +16,19 @@
   "exit_action": {
     "label": "Leave",
     "action": {
-      "type": "minecraft:run_command",
-      "command": "say leave"
+      "type": "custom",
+      "id": "serverpassword:leave"
     }
   },
   "actions": [
     {
       "label": "Login",
       "action": {
-        "type": "minecraft:run_command",
-        "command": "say login"
+        "type": "custom",
+        "id": "serverpassword:login",
+        "payload": {
+          "password": "ThisIsMyPassword!"
+        }
       }
     }
   ],
