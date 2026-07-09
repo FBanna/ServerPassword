@@ -1,16 +1,18 @@
 package fbanna.serverpassword;
 
+import fbanna.serverpassword.event.LoginEvent;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.Identifier;
 
+import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class ServerPassword implements ModInitializer {
-	public static final String MOD_ID = "ServerPassword";
+	public static final String MOD_ID = "serverpassword";
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
@@ -25,7 +27,24 @@ public class ServerPassword implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+
+
 		LOGGER.info("Initialised ServerPassword");
+
+
+		LoginEvent.EVENT.register(((player, password) -> {
+
+			if (password == "h") {
+				LOGGER.info("nice going, all good");
+				return InteractionResult.PASS;
+			} else {
+				LOGGER.info("failed with password: " + password);
+				return InteractionResult.FAIL;
+			}
+
+
+
+		}));
 	}
 
 }

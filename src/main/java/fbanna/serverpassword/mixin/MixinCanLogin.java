@@ -19,7 +19,7 @@ import static fbanna.serverpassword.ServerPassword.WATCHEDPLAYERS;
 @Mixin(PlayerList.class)
 public class MixinCanLogin {
 
-    @Inject(method = "canPlayerLogin", at = @At(value = "INVOKE", target = "isWhiteListed", shift = At.Shift.AFTER), cancellable = true)
+    @Inject(method = "canPlayerLogin", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;", shift = At.Shift.BEFORE), cancellable = true)
     private void inject(final SocketAddress address, final NameAndId nameAndId, CallbackInfoReturnable<Component> cir) {
 
         WATCHEDPLAYERS.add(nameAndId.id());
