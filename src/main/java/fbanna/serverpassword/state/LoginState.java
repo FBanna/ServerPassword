@@ -1,16 +1,19 @@
 package fbanna.serverpassword.state;
 
+import fbanna.serverpassword.event.DialogEventCallback;
+
 import java.util.concurrent.CompletableFuture;
 
 public class LoginState {
 
     private LoginStates state;
-    private CompletableFuture<Boolean> response;
+    //private CompletableFuture<Boolean> response;
+    private DialogEventCallback callback;
 
     /// New Login state which starts at watched login
     public LoginState(){
         this.state = LoginStates.WATCHED_LOGIN;
-        this.response = null;
+        this.callback = null;
     }
 
     public boolean isWaitingResponse() {
@@ -25,12 +28,18 @@ public class LoginState {
 //        this.state = state;
 //    }
 
-    public void setWaitingResponse(CompletableFuture<Boolean> future) {
+//    public void setWaitingResponse(CompletableFuture<Boolean> future) {
+//        this.state = LoginStates.WAITING_RESPONSE;
+//        this.response = future;
+//    }
+
+    public void setWaitingCallback(DialogEventCallback callback) {
         this.state = LoginStates.WAITING_RESPONSE;
-        this.response = future;
+        this.callback = callback;
     }
 
-    public void joinFuture(Boolean result) {
-        this.response.complete(result);
+    public void onResponse(Boolean result) {
+        //this.response.complete(result);
+        this.callback.run(result);
     }
 }

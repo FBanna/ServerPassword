@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.configuration.ServerboundFinishConfigurati
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dialog.Dialog;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
@@ -26,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -44,12 +46,19 @@ public abstract class MixinConfigurationFinished extends ServerCommonPacketListe
     @Final
     private GameProfile gameProfile;
 
+    @Shadow
+    private ClientInformation clientInformation;
+
+    @Shadow
+    @Final
+    private static Component DISCONNECT_REASON_INVALID_DATA;
+
     private MixinConfigurationFinished(MinecraftServer server, Connection connection, CommonListenerCookie cookie) {
         super(server, connection, cookie);
     }
 
 
-    @Inject(method = "handleConfigurationFinished", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/config/PrepareSpawnTask;spawnPlayer(Lnet/minecraft/network/Connection;Lnet/minecraft/server/network/CommonListenerCookie;)Lnet/minecraft/server/level/ServerPlayer;", shift = At.Shift.BEFORE))
+    @Inject(method = "handleConfigurationFinished", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/config/PrepareSpawnTask;spawnPlayer(Lnet/minecraft/network/Connection;Lnet/minecraft/server/network/CommonListenerCookie;)Lnet/minecraft/server/level/ServerPlayer;", shift = At.Shift.BEFORE), cancellable = true)
     private void inject(ServerboundFinishConfigurationPacket packet, CallbackInfo ci) {
 
         UUID id = this.gameProfile.id();
@@ -74,10 +83,10 @@ public abstract class MixinConfigurationFinished extends ServerCommonPacketListe
             LOGGER.info("no");
         } else {
 
-            CompletableFuture<Boolean> response = new CompletableFuture<>();
-            response.completeOnTimeout(false, 5, TimeUnit.SECONDS);
+//            CompletableFuture<Boolean> response = new CompletableFuture<>();
+//            response.completeOnTimeout(false, 5, TimeUnit.SECONDS);
 
-            state.setWaitingResponse(response);
+            //state.setWaitingResponse(response);
 
             Optional<Holder.Reference<Dialog>> dialogEntry = dialogRegistry.get().get(dialogId);
 
@@ -89,21 +98,30 @@ public abstract class MixinConfigurationFinished extends ServerCommonPacketListe
                 LOGGER.error("Dialog {} not found in registry!", dialogId);
             }
 
-            if(!response.join()) { // if they fail to provide the correct details
-                this.connection.disconnect(Component.literal("Failed to provide correct server password"));
-                //this.connection.send(new ClientboundShowDialogPacket());
-            }
+            state.setWaitingCallback((result) -> {
+                // handle response
+
+                WATCHEDPLAYERS.remove(id);
+
+                if(!result) {
+                    this.connection.disconnect(Component.literal("Failed to provide correct server password"));
+                } else {
+                    LOGGER.info("letting ya in");
+
+                    // finish login - MUST ENSURE THIS MATCHES VANILLA
+
+                    try {
+                        Objects.requireNonNull(this.prepareSpawnTask).spawnPlayer(this.connection, this.createCookie(this.clientInformation));
+                    } catch (Exception e) {
+                        LOGGER.error("Couldn't place player in world", e);
+                        this.disconnect(DISCONNECT_REASON_INVALID_DATA);
+                    }
+                }
+
+            });
+
+            ci.cancel();
 
         }
-
-
-
-        WATCHEDPLAYERS.remove(id);
-
-
-
-
-
     }
-
 }

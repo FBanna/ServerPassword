@@ -42,7 +42,8 @@ public class LoginDialogEvent extends DialogEventImpl{
         }
 
         LOGGER.info(oTag.get().toString());
-        state.joinFuture(true); // accept player on response
+        state.onResponse(true);
+        //state.joinFuture(true); // accept player on response
 
         return; // success
 
