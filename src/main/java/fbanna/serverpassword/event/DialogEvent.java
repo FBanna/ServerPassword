@@ -16,9 +16,6 @@ public interface DialogEvent {
     Event<DialogEvent> EVENT = EventFactory.createArrayBacked(DialogEvent.class,
             (DialogEvent[] listeners) -> (packet, uuid,connection) -> {
 
-
-                ServerPassword.LOGGER.info("all good");
-
                 for (DialogEvent listener: listeners) {
                     listener.interact(packet, uuid, connection);
                 }

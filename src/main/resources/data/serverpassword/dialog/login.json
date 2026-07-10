@@ -9,7 +9,7 @@
   "inputs": [
     {
       "type": "minecraft:text",
-      "key": "pass",
+      "key": "password",
       "label": "Enter password"
     }
   ],
@@ -24,11 +24,8 @@
     {
       "label": "Login",
       "action": {
-        "type": "custom",
-        "id": "serverpassword:login",
-        "payload": {
-          "password": "ThisIsMyPassword!"
-        }
+        "type": "dynamic/custom",
+        "id": "serverpassword:login"
       }
     }
   ],

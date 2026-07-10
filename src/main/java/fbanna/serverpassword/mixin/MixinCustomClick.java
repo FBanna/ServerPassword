@@ -26,9 +26,8 @@ public abstract class MixinCustomClick {
 
 
 
-    @Inject(method = "handleCustomClickAction", at = @At(value = "HEAD"))
+    @Inject(method = "handleCustomClickAction", at = @At(value = "TAIL"))
     private void inject(ServerboundCustomClickActionPacket packet, CallbackInfo ci) {
-        ServerPassword.LOGGER.info("we got here baybe");
         DialogEvent.EVENT.invoker().interact(packet, this.playerProfile().id(), this.connection);
     }
 }
