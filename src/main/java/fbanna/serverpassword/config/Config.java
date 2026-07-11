@@ -2,19 +2,29 @@ package fbanna.serverpassword.config;
 
 import net.fabricmc.loader.api.FabricLoader;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.Properties;
 
+import static fbanna.serverpassword.ServerPassword.LOGGER;
 import static fbanna.serverpassword.ServerPassword.MOD_ID;
 
 public class Config {
 
-    public static final String PASSWORD;
+    private static final String PASSWORD;
+
+
+    private static byte[] SALT;
+    private static byte[] HASHEDPASSWORD;
     //public static final boolean SPECTATOR_CAN_OPEN;
 
     static {
@@ -40,7 +50,50 @@ public class Config {
     }
 
     public static void init() {
+        // generate password hash
 
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+
+        SALT = salt;
+
+        KeySpec spec = new PBEKeySpec(PASSWORD.toCharArray(), SALT, 65536, 256);
+
+
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            HASHEDPASSWORD = hash;
+            LOGGER.info(Arrays.toString(hash));
+        } catch(Exception e) {
+            LOGGER.error("error loading function");
+        }
+
+
+    }
+
+    public static boolean comparePassword(String password) {
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), SALT, 65536, 256);
+
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+
+            int accum = 0;
+
+            for (int i = 0; i < HASHEDPASSWORD.length; i++)
+                accum |= (HASHEDPASSWORD[i] ^ hash[i]);
+
+            return accum == 0;
+
+
+        } catch(Exception e) {
+            LOGGER.error("error loading function");
+            return false;
+        }
     }
 
     private static String getString(Properties properties, Properties newProperties, String key, String defaultValue) {

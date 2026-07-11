@@ -49,7 +49,6 @@ public class LoginDialogEvent extends DialogEventImpl{
         LOGGER.info(oTag.get().toString());
 
 
-        // CHANGE THIS NOW!!!
         if (!(oTag.get() instanceof CompoundTag)) {
             LOGGER.info("bad packet!");
             state.onResponse(false);
@@ -66,7 +65,7 @@ public class LoginDialogEvent extends DialogEventImpl{
             return;
         }
 
-        if (!pass.get().equals(Config.PASSWORD)) {
+        if(!Config.comparePassword(pass.get())){
             LOGGER.info("bad password");
             state.onResponse(false);
             return;
