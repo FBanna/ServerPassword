@@ -63,7 +63,7 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
             Identifier dialogId = Identifier.fromNamespaceAndPath(MOD_ID, "login");
             Optional<Registry<Dialog>> dialogRegistry = this.server.registryAccess().lookup(Registries.DIALOG);
 
-            if (dialogRegistry.isEmpty()) {
+            if (dialogRegistry.isEmpty()) { // should never happen
 
                 LOGGER.error("Could not find dialog registry!");
                 this.listener.completeTask(TYPE);
@@ -73,7 +73,7 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
 
             Optional<Holder.Reference<Dialog>> dialogEntry = dialogRegistry.get().get(dialogId);
 
-            if (dialogEntry.isEmpty()) {
+            if (dialogEntry.isEmpty()) { // should never happen
                 LOGGER.error("Dialog {} not found in registry!", dialogId);
                 this.listener.completeTask(TYPE);
                 return;
@@ -82,26 +82,23 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
             CompletableFuture<Boolean> future = new CompletableFuture<>();
             future.completeOnTimeout(false, 1, TimeUnit.MINUTES);
 
-
-
             state.setWaitingResponse(future);
+
 
             this.listener.send(new ClientboundShowDialogPacket(dialogEntry.get()));
 
 
             if (future.join()) {
-                LOGGER.info("correct password!");
+
                 this.server.getPlayerList().getWhiteList().add(new UserWhiteListEntry(nameAndId)); // add player to whitelist
+                LOGGER.info("{} has automatically been whitelisted", nameAndId.name());
             } else { // or kick
-                LOGGER.info("you failed!");
 
                 this.listener.send(ClientboundClearDialogPacket.INSTANCE);
                 this.listener.disconnect(Component.literal("Failed to provide correct server password"));
             }
 
-            WATCHEDPLAYERS.remove(nameAndId.id());
-
-
+            WATCHEDPLAYERS.remove(nameAndId.id()); // clear player
 
             this.listener.completeTask(TYPE);
         });

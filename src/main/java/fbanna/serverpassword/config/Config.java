@@ -22,10 +22,14 @@ public class Config {
 
     private static final String PASSWORD;
 
+    private static byte[] HASHEDPASSWORD;
 
     private static byte[] SALT;
-    private static byte[] HASHEDPASSWORD;
-    //public static final boolean SPECTATOR_CAN_OPEN;
+    private static final String FUNCTION = "PBKDF2WithHmacSHA256";
+    private static final int ITERATIONS = 65536;
+    private static final int SALT_LEN = 16;
+    private static final int HASH_LEN = 256;
+
 
     static {
         final Properties properties = new Properties();
@@ -53,20 +57,20 @@ public class Config {
         // generate password hash
 
         SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
+        byte[] salt = new byte[SALT_LEN];
         random.nextBytes(salt);
 
         SALT = salt;
 
-        KeySpec spec = new PBEKeySpec(PASSWORD.toCharArray(), SALT, 65536, 256);
+        KeySpec spec = new PBEKeySpec(PASSWORD.toCharArray(), SALT, ITERATIONS, HASH_LEN);
 
 
         try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(FUNCTION);
 
             byte[] hash = factory.generateSecret(spec).getEncoded();
             HASHEDPASSWORD = hash;
-            LOGGER.info(Arrays.toString(hash));
+            //LOGGER.info(Arrays.toString(hash));
         } catch(Exception e) {
             LOGGER.error("error loading function");
         }
@@ -75,10 +79,10 @@ public class Config {
     }
 
     public static boolean comparePassword(String password) {
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), SALT, 65536, 256);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), SALT, ITERATIONS, HASH_LEN);
 
         try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(FUNCTION);
 
             byte[] hash = factory.generateSecret(spec).getEncoded();
 

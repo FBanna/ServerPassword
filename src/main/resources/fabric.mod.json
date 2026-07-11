@@ -3,7 +3,7 @@
 	"id": "serverpassword",
 	"version": "${version}",
 	"name": "Server Password",
-	"description": "Password protect your whitelist",
+	"description": "Automatically add players to the whitelist with a server password",
 	"authors": [
 		"FBanna"
 	],

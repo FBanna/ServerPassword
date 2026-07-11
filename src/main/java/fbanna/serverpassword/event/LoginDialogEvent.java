@@ -33,7 +33,6 @@ public class LoginDialogEvent extends DialogEventImpl{
 
 
         if (!state.isWaitingResponse()) {
-            state.onResponse(false); // idk
             return; // fail
         }
 
@@ -42,15 +41,12 @@ public class LoginDialogEvent extends DialogEventImpl{
 
         if (oTag.isEmpty()) {
             state.onResponse(false);
-            LOGGER.info("no data!");
+            //LOGGER.info("no data!");
             return; // fail
         }
 
-        LOGGER.info(oTag.get().toString());
-
-
         if (!(oTag.get() instanceof CompoundTag)) {
-            LOGGER.info("bad packet!");
+            //LOGGER.info("bad packet!");
             state.onResponse(false);
             return;
         }
@@ -60,22 +56,18 @@ public class LoginDialogEvent extends DialogEventImpl{
         Optional<String> pass = tag.getString("password");
 
         if (pass.isEmpty()) {
-            LOGGER.info("failed to get string");
+            //LOGGER.info("failed to get string");
             state.onResponse(false);
             return;
         }
 
         if(!Config.comparePassword(pass.get())){
-            LOGGER.info("bad password");
+            //LOGGER.info("bad password");
             state.onResponse(false);
             return;
         }
 
-        LOGGER.info("correct password");
         state.onResponse(true);
-        //state.joinFuture(true); // accept player on response
-
-        return; // success
 
     }
 }

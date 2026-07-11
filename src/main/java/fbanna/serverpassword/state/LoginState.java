@@ -1,5 +1,7 @@
 package fbanna.serverpassword.state;
 
+import org.apache.logging.log4j.core.util.Assert;
+
 import java.util.concurrent.CompletableFuture;
 
 public class LoginState {
@@ -25,23 +27,19 @@ public class LoginState {
         return this.state == LoginStates.WATCHED_LOGIN;
     }
 
-//    public void setState(LoginStates state) {
-//        this.state = state;
-//    }
+
 
     public void setWaitingResponse(CompletableFuture<Boolean> future) {
         this.state = LoginStates.WAITING_RESPONSE;
         this.future = future;
     }
 
-//    public void setWaitingCallback(DialogEventCallback callback) {
-//        this.state = LoginStates.WAITING_RESPONSE;
-//        this.callback = callback;
-//    }
 
     public void onResponse(Boolean result) {
-        //this.response.complete(result);
+
+        Assert.requireNonEmpty(this.future);
+
         this.future.complete(result);
-        //this.callback.run(result);
+
     }
 }

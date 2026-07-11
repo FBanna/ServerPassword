@@ -73,7 +73,7 @@ jobs:
           # your assets on Modrinth.
           #tag: ${{ github.ref_name }}
 
-          modrinth-id: fEwhuw0Y
+          modrinth-id: jYyRdobR
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           loaders: fabric
           version-type: release

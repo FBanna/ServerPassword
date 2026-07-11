@@ -42,12 +42,8 @@ public abstract class MixinFinishConnectionSetup{
         NameAndId nameAndId = new NameAndId(this.authenticatedProfile); // always non null
 
         if (!this.server.getPlayerList().isWhiteListed(nameAndId)) {
-
             WATCHEDPLAYERS.put(nameAndId.id(), new LoginState());
-            LOGGER.info("watching player");
-
             return null;
-
         }
 
         return error;
