@@ -35,7 +35,7 @@ public class ServerPassword implements ModInitializer {
 				.orElseThrow(() -> new RuntimeException("Could not get the ServerPassword mod container."));
 
 
-		LOGGER.info("Initialised ServerPassword version: {}!", container.getMetadata().getVersion().getFriendlyString());
+		LOGGER.info("Initialised ServerPassword version {}!", container.getMetadata().getVersion().getFriendlyString());
 
 		new LoginDialogEvent("login");
 		new LeaveDialogEvent("leave");

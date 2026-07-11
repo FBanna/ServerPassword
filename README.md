@@ -6,4 +6,6 @@ Simply share a password to members who want to join, when they connect to the se
 
 The password can be configured in the config but by default is: `change_me`.
 
+Ensure that `enforce-whitelist` (in server.properties) and whitelist are both enabled.
+
 The mod uses dialogs to prompt the user for passwords. It should also work for geyser players.
