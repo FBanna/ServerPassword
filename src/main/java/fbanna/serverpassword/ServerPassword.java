@@ -36,10 +36,10 @@ public class ServerPassword implements ModInitializer {
 
 		// register dialog
 
-//		RuntimeResourcePack pack = RuntimeResourcePack.create("%s:login_dialog".formatted(MOD_ID));
-//		pack.addDataPackMcmeta("Dialogs for ServerPassword");
-//		LoginDialog.register(pack);
-//		pack.dumpDirect(Path.of("dumps/serverpassword"));
+		RuntimeResourcePack pack = RuntimeResourcePack.create("%s:login_dialog".formatted(MOD_ID));
+		pack.addDataPackMcmeta("Dialogs for ServerPassword");
+		LoginDialog.register(pack);
+		pack.dumpDirect(Path.of("dumps/serverpassword"));
 
 
 		// register dialog events

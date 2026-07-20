@@ -48,7 +48,8 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 //	implementation include("eu.pb4:sgui:${project.sgui_version}")
-	implementation include("net.vampirestudios:packwright:${project.packwright_version}")
+
+	implementation "net.vampirestudios:packwright:${project.packwright_version}"
 }
 
 processResources {
