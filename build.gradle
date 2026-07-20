@@ -33,11 +33,11 @@ loom {
 	}
 }
 
-fabricApi {
-	configureDataGeneration() {
-		client = true
-	}
-}
+//fabricApi {
+//	configureDataGeneration() {
+//		client = true
+//	}
+//}
 
 dependencies {
 	// To change the versions see the gradle.properties file
@@ -48,7 +48,7 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 //	implementation include("eu.pb4:sgui:${project.sgui_version}")
-	implementation("net.vampirestudios:packwright:${project.packwright_version}")
+	implementation include("net.vampirestudios:packwright:${project.packwright_version}")
 }
 
 processResources {

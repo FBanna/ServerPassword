@@ -21,6 +21,7 @@ import static fbanna.serverpassword.ServerPassword.MOD_ID;
 public class Config {
 
     private static final String PASSWORD;
+    public static final String MESSAGE;
 
     private static byte[] HASHEDPASSWORD;
 
@@ -45,6 +46,7 @@ public class Config {
         }
 
         PASSWORD = getString(properties, newProperties, "password", "change_me");
+        MESSAGE = getString(properties, newProperties, "message", "Reach out to the server owner for the password");
 
         try (OutputStream out = Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             newProperties.store(out, "Configuration file for ServerPassword");

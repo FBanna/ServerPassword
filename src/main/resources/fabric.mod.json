@@ -7,15 +7,12 @@
 	"authors": [
 		"FBanna"
 	],
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/serverpassword/icon.png",
 	"environment": "server",
 	"entrypoints": {
 		"main": [
 			"fbanna.serverpassword.ServerPassword"
-		],
-		"fabric-datagen": [
-			"fbanna.serverpassword.client.ServerPasswordDataGenerator"
 		]
 	},
 	"mixins": [
