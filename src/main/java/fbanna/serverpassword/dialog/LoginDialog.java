@@ -20,13 +20,9 @@ public class LoginDialog {
     public static Dialog buildLoginDialog() {
 
         return Dialog.multiAction("Login",
-
-                Dialog.Button.button("Login")
-                        .action(Action.dynamicCustom(modResource("login")))
+                        Dialog.Button.button("Login")
+                                .action(Action.dynamicCustom(modResource("login")))
                 )
-//                Dialog.Button.button("Leave")
-//                        .action(Action.custom(modResource("leave")))
-//                )
                 .input(Input.text("password", "Enter Password"))
                 .plainMessage(Config.MESSAGE)
                 .exitAction(
@@ -38,6 +34,6 @@ public class LoginDialog {
     }
 
     public static void register(RuntimeResourcePack pack) {
-        pack.addDialog(modResource("dialogs/login"), buildLoginDialog());
+        pack.addDialog(modResource("login"), buildLoginDialog());
     }
 }

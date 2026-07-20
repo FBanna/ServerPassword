@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.world.InteractionResult;
+import net.vampirestudios.packwright.api.PackwrightCallback;
 import net.vampirestudios.packwright.api.RuntimeResourcePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,8 @@ public class ServerPassword implements ModInitializer {
 		pack.addDataPackMcmeta("Dialogs for ServerPassword");
 		LoginDialog.register(pack);
 		pack.dumpDirect(Path.of("dumps/serverpassword"));
+
+		PackwrightCallback.BEFORE_VANILLA.register(resources -> resources.add(pack));
 
 
 		// register dialog events
