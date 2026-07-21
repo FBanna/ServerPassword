@@ -47,6 +47,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+
+	// If packwright becomes a mod -> REMOVE the include! + depend on packwright the mod
 	implementation include("net.vampirestudios:packwright:${project.packwright_version}")
 }
 
