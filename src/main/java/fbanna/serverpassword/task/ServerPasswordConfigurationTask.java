@@ -92,10 +92,11 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
 
                 this.server.getPlayerList().getWhiteList().add(new UserWhiteListEntry(nameAndId)); // add player to whitelist
                 LOGGER.info("{} has automatically been whitelisted", nameAndId.name());
-            } else { // or kick
+            } else { // or kick -- Does not kick from client side?? why?
 
                 this.listener.send(ClientboundClearDialogPacket.INSTANCE);
                 this.listener.disconnect(Component.literal("Failed to provide correct server password"));
+
             }
 
             WATCHEDPLAYERS.remove(nameAndId.id()); // clear player

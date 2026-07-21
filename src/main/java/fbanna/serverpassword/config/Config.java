@@ -72,7 +72,7 @@ public class Config {
 
             byte[] hash = factory.generateSecret(spec).getEncoded();
             HASHEDPASSWORD = hash;
-            //LOGGER.info(Arrays.toString(hash));
+
         } catch(Exception e) {
             LOGGER.error("error loading function");
         }

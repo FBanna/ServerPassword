@@ -21,16 +21,16 @@ public class LoginDialog {
 
         return Dialog.multiAction("Login",
                         Dialog.Button.button("Login")
-                                .action(Action.dynamicCustom(modResource("login")))
+                                .action(Action.dynamicCustom(modResource("login_event")))
                 )
                 .input(Input.text("password", "Enter Password"))
                 .plainMessage(Config.MESSAGE)
+                .pause(false)
+                .canCloseWithEscape(false)
                 .exitAction(
                         Dialog.Button.button("Leave")
-                                .action(Action.custom(modResource("leave")))
+                                .action(Action.custom(modResource("leave_event")))
                 );
-
-
     }
 
     public static void register(RuntimeResourcePack pack) {

@@ -33,27 +33,31 @@ public class ServerPassword implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		Config.init();
+		Config.init(); // init config
 
 		// register dialog
 
 		RuntimeResourcePack pack = RuntimeResourcePack.create("%s:login_dialog".formatted(MOD_ID));
 		pack.addDataPackMcmeta("Dialogs for ServerPassword");
 		LoginDialog.register(pack);
-		pack.dumpDirect(Path.of("dumps/serverpassword"));
+
+		// DEBUGGING
+		//pack.dump();
 
 		PackwrightCallback.BEFORE_VANILLA.register(resources -> resources.add(pack));
 
 
 		// register dialog events
-		new LoginDialogEvent("login");
-		new LeaveDialogEvent("leave");
+		new LoginDialogEvent("login_event");
+		new LeaveDialogEvent("leave_event");
 
+
+		// Watch leaving players
 		ServerConfigurationConnectionEvents.DISCONNECT.register(((listener, server) -> {
 			WATCHEDPLAYERS.remove(listener.getOwner().id());
 		}));
 
-
+		// Loading message
 		ModContainer container = FabricLoader.getInstance().getModContainer(MOD_ID)
 				.orElseThrow(() -> new RuntimeException("Could not get the ServerPassword mod container."));
 
