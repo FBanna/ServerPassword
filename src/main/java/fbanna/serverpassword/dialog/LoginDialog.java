@@ -5,11 +5,13 @@ import fbanna.serverpassword.config.Config;
 import net.minecraft.resources.Identifier;
 import net.vampirestudios.packwright.api.RuntimeResourcePack;
 import net.vampirestudios.packwright.data.registry.dialog.Action;
-import net.vampirestudios.packwright.data.registry.dialog.Body;
 import net.vampirestudios.packwright.data.registry.dialog.Dialog;
 import net.vampirestudios.packwright.data.registry.dialog.Input;
 
 import static fbanna.serverpassword.ServerPassword.MOD_ID;
+
+
+// note for if packwright is not maintained - https://gist.github.com/sylvxa/4e3b18cd6957c49315e74f1dc0101c92
 
 public class LoginDialog {
 
