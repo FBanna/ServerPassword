@@ -1,6 +1,5 @@
 package fbanna.serverpassword.task;
 
-import fbanna.serverpassword.ServerPassword;
 import fbanna.serverpassword.state.LoginState;
 import net.minecraft.DefaultUncaughtExceptionHandler;
 import net.minecraft.core.Holder;
