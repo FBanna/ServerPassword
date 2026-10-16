@@ -50,7 +50,7 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
         NameAndId nameAndId = new NameAndId(this.listener.getOwner());
 
         if (!WATCHEDPLAYERS.containsKey(nameAndId.id())) {
-            this.listener.completeTask(TYPE);
+            this.server.execute(() -> this.listener.completeTask(TYPE));
             return;
         }
 
@@ -65,7 +65,7 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
             if (dialogRegistry.isEmpty()) { // should never happen
 
                 LOGGER.error("Could not find dialog registry!");
-                this.listener.completeTask(TYPE);
+                this.server.execute(() -> this.listener.completeTask(TYPE));
                 return;
             }
 
@@ -74,7 +74,7 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
 
             if (dialogEntry.isEmpty()) { // should never happen
                 LOGGER.error("Dialog {} not found in registry!", dialogId);
-                this.listener.completeTask(TYPE);
+                this.server.execute(() -> this.listener.completeTask(TYPE));
                 return;
             }
 
@@ -87,20 +87,28 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
             this.listener.send(new ClientboundShowDialogPacket(dialogEntry.get()));
 
 
-            if (future.join()) {
 
-                this.server.getPlayerList().getWhiteList().add(new UserWhiteListEntry(nameAndId)); // add player to whitelist
-                LOGGER.info("{} has automatically been whitelisted", nameAndId.name());
-            } else { // or kick -- Does not kick from client side?? why?
+            final boolean allowed = future.join();
 
-                this.listener.send(ClientboundClearDialogPacket.INSTANCE);
-                this.listener.disconnect(Component.literal("Failed to provide correct server password"));
+            // Minecraft world and login configuration must be
+            // finalized on the main server thread.
+            this.server.execute(() -> {
+                if (allowed) {
+                    this.server.getPlayerList().getWhiteList().add(
+                        new UserWhiteListEntry(nameAndId)
+                    );
+                    LOGGER.info("{} has automatically been whitelisted", nameAndId.name());
+                } else {
+                    this.listener.send(ClientboundClearDialogPacket.INSTANCE);
+                    this.listener.disconnect(
+                        Component.literal("Failed to provide correct server password")
+                    );
+                }
 
-            }
+                WATCHEDPLAYERS.remove(nameAndId.id());
+                this.listener.completeTask(TYPE);
+            });
 
-            WATCHEDPLAYERS.remove(nameAndId.id()); // clear player
-
-            this.listener.completeTask(TYPE);
         });
     }
 
