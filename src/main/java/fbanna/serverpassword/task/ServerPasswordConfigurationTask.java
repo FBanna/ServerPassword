@@ -5,9 +5,12 @@ import net.minecraft.DefaultUncaughtExceptionHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.common.ClientboundClearDialogPacket;
+import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
 import net.minecraft.network.protocol.common.ClientboundShowDialogPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -83,9 +86,7 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
 
             state.setWaitingResponse(future);
 
-
             this.listener.send(new ClientboundShowDialogPacket(dialogEntry.get()));
-
 
 
             final boolean allowed = future.join();
@@ -99,10 +100,13 @@ public class ServerPasswordConfigurationTask implements ConfigurationTask {
                     );
                     LOGGER.info("{} has automatically been whitelisted", nameAndId.name());
                 } else {
-                    this.listener.send(ClientboundClearDialogPacket.INSTANCE);
-                    this.listener.disconnect(
-                        Component.literal("Failed to provide correct server password")
+
+                    this.listener.send(
+                            ClientboundClearDialogPacket.INSTANCE
                     );
+
+//                    this.listener.disconnect(Component.literal("Failed to provide correct server password"));
+
                 }
 
                 WATCHEDPLAYERS.remove(nameAndId.id());
